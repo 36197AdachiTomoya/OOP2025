@@ -1,7 +1,8 @@
 ﻿namespace DistanceConverter {
     internal class Program {
+        //コマンドライン引数で指定された範囲のフィートとメートルの対応表を出力する
         static void Main(string[] args) {
-
+            
             //string から intに変換 
             int start = int.Parse(args[1]);
             int end = int.Parse(args[2]);
@@ -28,9 +29,13 @@
         }
         static void PrintFeetToMeterlist(int start ,int stop) {
             for(int meter = start; meter <= stop; meter++) {
-                double feet = FeetToMeter(meter);
-                Console.WriteLine($"{meter}m = {feet:0.0000}ft");
+                double feet = MeterToFeet(meter);
+                Console.WriteLine($"{feet}ft = {meter:0.0000}m");
             }
+        }
+
+        static void PrintMeterToFeetlist() {
+
         }
 
         static double FeetToMeter(int feet) {
