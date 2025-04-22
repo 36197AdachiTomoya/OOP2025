@@ -14,20 +14,17 @@ namespace DistanceConverter {
                 PrintMeterToFeetlist(start, end);
             }
         }
-        static void PrintMeterToFeetlist(int start, int end) {
-            FeetConverter fc = new FeetConverter();
 
+        static void PrintMeterToFeetlist(int start, int end) {
             for (int meter = start; meter <= end; meter++) {
-                double feet = fc.FromMeter(meter);
+                double feet = FeetConverter.FromMeter(meter);
                 Console.WriteLine($"{feet}ft = {meter:0.0000}m");
             }
         }
 
         static void PrintFeetToMeterlist(int start, int end) {
-            FeetConverter fc = new FeetConverter();
-
             for (int feet = start; feet <= end; feet++) {
-                double meter = fc.FromMeter(feet);
+                double meter = FeetConverter.FromMeter(feet);
                 Console.WriteLine($"{meter}ft = {feet:0.0000}m");
             }
 
