@@ -16,7 +16,7 @@ namespace Exercise02
         //メートルからインチを求める
         public static double ToInch(int i) {
             return i / 0.0254;
-        } 
+        }
 
     }
 }
