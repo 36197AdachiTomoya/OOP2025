@@ -17,7 +17,7 @@ namespace Exercise02 {
             //InchToMeter(1, 10);
         }
 
-        //インチからメートルに変換
+        //インチからメートルへの対応表を出力
         /* static void InchToMeter(int s, int e) {
              for (int start = s; start >= e; start++) {
                  double meter = InchConverter.ToMeter(start);
@@ -25,7 +25,7 @@ namespace Exercise02 {
              }
          }*/
 
-        //メートルからインチに変換
+        //メートルからインチへの対応表を出力
         /* static void MeterToInch(int start, int end) {
              for (int s = start; s <= end; s++) {
                  double inch = InchConverter.ToInch(s);
@@ -33,14 +33,14 @@ namespace Exercise02 {
              }
          }*/
 
-        //ヤードからメートルに変換
+        //ヤードからメートルへの対応表を出力
         static void YardToMeter(int start, int end) {
             for (int s = start; s <= end; s++) {
                 double meter = YardConverter.ToMeter(s);
                 Console.WriteLine($"{s}yard = {meter:0.0000}m");
             }
         }
-        //メートルからヤードに変換
+        //メートルからヤードにへの対応表を出力
         static void MeterToYard(int start, int end) {
             for (int s = start; s <= end; s++) {
                 double yard = YardConverter.ToYard(s);
