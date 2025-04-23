@@ -13,6 +13,7 @@ namespace Exercise02
             return inch * ratio;
         }
 
+        //メートルからインチを求める
         public static double ToInch(int i) {
             return i / 0.0254;
         } 
