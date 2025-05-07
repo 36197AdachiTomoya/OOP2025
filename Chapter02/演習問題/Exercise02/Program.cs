@@ -5,9 +5,20 @@ using System.Xml.Serialization;
 namespace Exercise02 {
     internal class Program {
         static void Main(string[] args) {
+            //選択
             Console.WriteLine("１：ヤードからメートル");
             Console.WriteLine("２：メートルからヤード");
+
+            //int k = int.Parse(Console.ReadLine());
+
+            //ヤードからメートル、メートルからヤード
+            //YardToMeter();
+            //MeterToYard();
+
+            //入力
             int i = int.Parse(Console.ReadLine());
+
+            //判定
             if (i == 1) {
                 Console.Write("変換前：");
                 int j = int.Parse(Console.ReadLine());

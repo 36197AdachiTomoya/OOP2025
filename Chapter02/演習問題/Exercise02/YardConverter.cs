@@ -13,6 +13,7 @@ namespace Exercise02 {
             return yard * 0.9144;
         }
 
+        //メートルからヤード
         public static double ToYard(int meter) {
             return meter / yard;
         }
