@@ -15,16 +15,34 @@ namespace SalesCalculator{
         }
 
         //店舗売り上げを求める
-        public Dictionary<string, int> GetPerStoreSales() {
+        public Dictionary<string, int> GetPerCategory() {
             Dictionary<string, int> dict = new Dictionary<string, int>();
-            foreach(Sale sale in _sales){
-                if (dict.ContainsKey(sale.ShopName)) {
-                    dict[sale.ShopName] += sale.Amount;
+            foreach (Sale sale in _sales) {
+                if (dict.ContainsKey(sale.ProductCategory)) {
+                    dict[sale.ProductCategory] += sale.Amount;
                 } else {
-                    dict[sale.ShopName] = sale.Amount;
+                    dict[sale.ProductCategory] = sale.Amount;
                 }
             }
             return dict;
+        }
+
+        //売り上げデータを読み込み、Saleオブジェクトのリストを返す
+        public static List<Sale> ReadSales(string filePath) {
+            //売り上げデータを入れるリストオブジェクトを生成
+            List<Sale> sales = new List<Sale>();
+            //ファイルを一気に読み込み
+            string[] lines = File.ReadAllLines(filePath);
+            foreach (string line in lines) {
+                string[] items = line.Split(',');
+                Sale sale = new Sale() {
+                    ShopName = items[0],
+                    ProductCategory = items[1],
+                    Amount = int.Parse(items[2]),
+                };
+                sales.Add(sale);
+            }
+            return sales;
         }
     }
 }
