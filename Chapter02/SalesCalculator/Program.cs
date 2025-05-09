@@ -2,7 +2,7 @@
     internal class Program {
         static void Main(string[] args) {
             SalesCounter sales = new SalesCounter(@"data\sales.csv");
-            Dictionary<string, int> amountsPerStore = sales.GetPerCategory();
+            IDictionary<string, int> amountsPerStore = sales.GetPerCategory();
             foreach (KeyValuePair<string, int> obj in amountsPerStore) {
                 Console.WriteLine($"{obj.Key} {obj.Value}");
             }
