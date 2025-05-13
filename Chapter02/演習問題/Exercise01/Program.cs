@@ -15,10 +15,14 @@
 
         //2.1.4
         private static void printSongs(Song[] songs) {
-            for(int i = 0; i < songs.Length; i++) {
-                TimeSpan time = TimeSpan.FromSeconds(songs[i].Length);
+            // ヘッダーを表示
+            Console.WriteLine("{0,-30} {1,-20} {2,5}", "Title", "Artist", "Length");
+
+            foreach (var song in songs) {
+                TimeSpan time = TimeSpan.FromSeconds(song.Length);
+                string formattedTime = time.ToString(@"mm\:ss");
                 Console.WriteLine
-                    ($"{songs[i].Title},{songs[i].ArtistName},{time.ToString(@"mm\:ss")}");
+                    ("{0,-30} {1,-20} {2,5}", song.Title, song.ArtistName, formattedTime);
             }
         }
     }
