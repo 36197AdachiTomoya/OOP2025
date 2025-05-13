@@ -12,8 +12,10 @@ namespace Exercise01 {
         int length;
 
         //2.1.2
-        public Song(string titile, string artistName, int length) {
-
+        public Song(string title, string artistName, int length) {
+            this.title = title;
+            this.artistName = artistName;
+            this.length = length;
         }
     }
 }
