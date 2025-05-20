@@ -27,25 +27,32 @@ namespace Exercise02 {
 
         private static void Exercise2_1(List<string> names) {
             Console.WriteLine("都市名を入力。空行で終了");
-            
+
             while (true) {
                 var name = Console.ReadLine();
                 if (string.IsNullOrEmpty(name)) {
                     break;
                 }
                 var index = names.FindIndex(s => s.Equals(name));
-                Console.WriteLine(index);
+                Console.WriteLine(index + 1);
             }
         }
 
         private static void Exercise2_2(List<string> names) {
-            var index = names.Count(s => s.Equals(o));
+            var index = names.Count(s => s.Contains("o"));
+            Console.WriteLine(index);
         }
 
         private static void Exercise2_3(List<string> names) {
+            var index = names.Where(s => s.Contains("o")).ToList();
+            index.ForEach(s => Console.WriteLine(s));
+            
         }
 
         private static void Exercise2_4(List<string> names) {
+            var index = names.Where(s => s.Contains("B")).Select(s => s.Length).ToList();
+            index.ForEach(s => Console.WriteLine(s));
+                
         }
     }
 }
