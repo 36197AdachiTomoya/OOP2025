@@ -13,9 +13,16 @@
                 "Hong Kong",
             };
 
-            var upperList = cities.ConvertAll(s => s.ToUpper());
-            upperList.ForEach(s => Console.WriteLine(s));
+            var query = cities.Where(s => s.Length <= 5);    //即時実行
+            foreach (var item in query) {
+                Console.WriteLine(item);
+            }
+            Console.WriteLine("------");
 
+            cities[0] = "Osaka";            //- cities[0]を変更 
+            foreach (var item in query) {   //- 再度、queryの内容を取り出す
+                Console.WriteLine(item);
+            }
         }
     }
 }

@@ -44,15 +44,17 @@ namespace Exercise02 {
         }
 
         private static void Exercise2_3(List<string> names) {
-            var index = names.Where(s => s.Contains("o")).ToList();
-            index.ForEach(s => Console.WriteLine(s));
-            
+            var index = names.Where(s => s.Contains("o")).ToArray();
+            foreach(var name in index) {
+                Console.WriteLine(name);
+            }
         }
 
         private static void Exercise2_4(List<string> names) {
-            var index = names.Where(s => s.Contains("B")).Select(s => s.Length).ToList();
-            index.ForEach(s => Console.WriteLine(s));
-                
+            var index = names.Where(s => s.StartsWith("B")).Select(s => s.Length).ToArray();
+            foreach(var count in index) {
+                Console.WriteLine(count);
+            }
         }
     }
 }
