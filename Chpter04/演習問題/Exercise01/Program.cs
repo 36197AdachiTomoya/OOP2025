@@ -43,8 +43,8 @@ namespace Exercise01 {
         }
 
         private static void Exercise1(List<string> langs) {
-            
-
+            var find = langs.Find(s => s.Length == 10) ?? "unknown";
+            Console.WriteLine(find);
         }
     }
 }
