@@ -29,5 +29,10 @@ namespace Exercise01{
             }
             return rtn;
         }
+
+        //5.1.4
+        public override string ToString() => Year + "年" + Month + "月";
+            
+        
     }
 }
