@@ -41,16 +41,20 @@ namespace Exercise02 {
         }
 
         private static void Exercise4(YearMonth[] ymCollection) {
-            if(FindFirst21C(ymCollection) == null) {
-                Console.WriteLine("21世紀のデータはありません");
+            var a = FindFirst21C(ymCollection);
+            if(a is not null) {
+                Console.WriteLine(a.Year);
             } else {
-                Console.WriteLine(FindFirst21C(ymCollection).ToString().Substring(0, 4));
+                Console.WriteLine("21世紀のデータはありません");
             }
             
         }
 
         private static void Exercise5(YearMonth[] ymCollection) {
-            
+            var s = ymCollection.Select(s => s.AddOneMonth()).ToArray();
+            foreach(var item in s) {
+                Console.WriteLine(item);
+            }
         }
     }
 }
