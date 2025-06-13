@@ -30,9 +30,8 @@
                     Console.WriteLine("上書きしますか？(Y/N)");
                     var answer1 = Console.ReadLine();
                     if (answer1 == "Y") {
-                        prefOfficeDict[pref] = pref;
                     } else if (answer1 == "N") {
-                        break;
+                        continue;
                     }
                 }
 
