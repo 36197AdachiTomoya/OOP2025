@@ -1,4 +1,6 @@
-﻿namespace PrefCapitalLocationSystem {
+﻿using System.Security.Cryptography.X509Certificates;
+
+namespace PrefCapitalLocationSystem {
     internal class Program {
         static private Dictionary<string, string> prefOfficeDict = new Dictionary<string, string>();
 
@@ -34,7 +36,7 @@
                         continue;
                     }
                 }
-
+        
                 //県庁所在地登録処理
 
                 //*　ここに入力　*******************//
@@ -82,8 +84,8 @@
         private static void allDisp() {
             //*　ここに入力　*******************//
             foreach (var item in prefOfficeDict) {
-                Console.WriteLine(item.Key);
-                Console.WriteLine(item.Value);
+                Console.WriteLine("都道府県:" + item.Key);
+                Console.WriteLine("県庁所在地:" + item.Value);
             }
             
         }
