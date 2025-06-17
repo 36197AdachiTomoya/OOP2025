@@ -7,6 +7,7 @@ namespace Test02 {
 
             Exercise01(numbers);
             Exercise02(numbers);
+            Exercise02(numbers);
 
             var cities = new List<string> {
                 "Tokyo", "New Delhi", "Bangkok", "London", "Paris", "Berlin",
@@ -76,7 +77,10 @@ namespace Test02 {
         //問題３　昇順に並べて表示（遅延実行とする）
         //　　　　出力結果【12 14 17 20 31 35 40 48 53 76 87 91 94】
         private static void Exercise03(int[] numbers) {
-            
+            var s = numbers.OrderBy(x => x);
+            foreach(var x in s) {
+                Console.Write(x + " ");
+            }
 
         }
 
