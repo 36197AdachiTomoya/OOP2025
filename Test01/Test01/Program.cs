@@ -4,7 +4,7 @@
     {
         static void Main(string[] args)
         {
-            var score = new ScoreCounter("@StudentScore.csv");
+            var score = new ScoreCounter("C:\\Users\\infosys\\source\\repos\\OOP2025\\Test01\\Test01\\StudentScore.csv");
             var TotalBySubject = score.GetPerStudentScore();
             foreach (var obj in TotalBySubject) {
                 Console.WriteLine("{0} {1}", obj.Key, obj.Value);

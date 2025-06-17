@@ -5,6 +5,9 @@ namespace Test02 {
         static void Main(string[] args) {
             var numbers = new[] { 12, 87, 94, 14, 53, 20, 40, 35, 76, 91, 31, 17, 48 };
 
+            Exercise01(numbers);
+            Exercise02(numbers);
+
             var cities = new List<string> {
                 "Tokyo", "New Delhi", "Bangkok", "London", "Paris", "Berlin",
                 "Canberra", "Hong Kong",
@@ -63,7 +66,7 @@ namespace Test02 {
         //問題１　合計値を表示（式形式で記述せよ）
         //　　　　出力結果【618】
         private static void Exercise01(int[] numbers) => Console.WriteLine(numbers.Sum());
-
+        
 
         //問題２　偶数の最大値を表示（式形式で記述せよ）
         //　　　　出力結果【94】
