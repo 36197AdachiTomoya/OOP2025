@@ -23,7 +23,7 @@ namespace Exercise01 {
             culture.DateTimeFormat.Calendar = new JapaneseCalendar();
             var str = datetime.ToString("ggyy年M月d日", culture);
             var dayOfweek = culture.DateTimeFormat.GetDayName(datetime.DayOfWeek);
-            Console.WriteLine(datetime.ToString("ggyy年M月d日" + str + dayOfweek));
+            Console.WriteLine(str + $"({dayOfweek})");
                 
         }
     }
