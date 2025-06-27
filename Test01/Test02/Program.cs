@@ -94,7 +94,7 @@ namespace Test02 {
         //問題５　Countメソッドを使い、小文字の'n'が含まれている都市名がいくつあるかカウントして結果を表示
         //　　　　出力結果【5】
         private static void Exercise05(List<string> cities) {
-            
+           
 
         }
 
