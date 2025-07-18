@@ -8,6 +8,9 @@ namespace CarReportSystem {
         //カーレポート管理用リスト
         BindingList<CarReport> listCarReports = new BindingList<CarReport>();
 
+        //設定クラスのインスタンスを生成
+        Settings settings = new Settings();
+
         public Form1() {
             InitializeComponent();
             dgvRecord.DataSource = listCarReports;
@@ -161,6 +164,8 @@ namespace CarReportSystem {
             //交互に色を設定（データグリッドビュー）
             dgvRecord.DefaultCellStyle.BackColor = Color.LightBlue;
             dgvRecord.AlternatingRowsDefaultCellStyle.BackColor = Color.WhiteSmoke;
+
+
         }
 
         private void tsmiExit_Click(object sender, EventArgs e) {
@@ -177,19 +182,22 @@ namespace CarReportSystem {
 
             if (cdColor.ShowDialog() == DialogResult.OK) {
                 BackColor = cdColor.Color;
+
+                //設定ファイルへ保存
+                settings.MainFormBackColor = cdColor.Color.ToArgb(); //背景色を設定インスタンスへ設定
             }
         }
 
         //ファイルオープン処理
         private void reportOpenFile() {
-            if(ofdReportFileOpen.ShowDialog() == DialogResult.OK) {
+            if (ofdReportFileOpen.ShowDialog() == DialogResult.OK) {
                 try {
                     //逆シリアル化でバイナリ形式を取り込む
 #pragma warning disable SYSLIB0011 // 型またはメンバーが旧型式です
                     var bf = new BinaryFormatter();
 #pragma warning restore SYSLIB0011 // 型またはメンバーが旧型式です
-                    using(FileStream fs = File.Open(
-                        ofdReportFileOpen.FileName, FileMode.Open,FileAccess.Read)) {
+                    using (FileStream fs = File.Open(
+                        ofdReportFileOpen.FileName, FileMode.Open, FileAccess.Read)) {
 
                         listCarReports = (BindingList<CarReport>)bf.Deserialize(fs);
                         dgvRecord.DataSource = listCarReports;
@@ -197,17 +205,17 @@ namespace CarReportSystem {
                         cbAuthor.Items.Clear();
                         cbCarName.Items.Clear();
                         //コンボボックスに登録
-                        foreach(var i in listCarReports) {
+                        foreach (var i in listCarReports) {
                             setCbAuthor(i.Author);
                             setCbCarName(i.CarName);
                         }
-                        
+
 
                     }
                 }
                 catch (Exception) {
                     tsslbMessage.Text = "ファイル形式が違います";
-                    
+
                 }
             }
         }
@@ -242,6 +250,15 @@ namespace CarReportSystem {
 
         private void 開くToolStripMenuItem_Click(object sender, EventArgs e) {
             reportOpenFile();
+        }
+
+        //フォームが閉じたら呼ばれる
+        private void Form1_FormClosed(object sender, FormClosedEventArgs e) {
+            //設定ファイルへ色情報を保存する処理（シリアル化）
+            
+
+
+
         }
     }
 }
