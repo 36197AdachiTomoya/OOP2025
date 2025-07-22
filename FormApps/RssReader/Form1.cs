@@ -1,18 +1,28 @@
 using System.Net;
 using System.Xml.Linq;
+using static System.Net.WebRequestMethods;
 
 namespace RssReader {
     public partial class Form1 : Form {
 
         private List<ItemData> items;
 
+        Dictionary<string, string> rssUrlDict = new Dictionary<string, string>() {
+            {"主要","https://news.yahoo.co.jp/rss/topics/top-picks.xml" },
+            {"経済","https://news.yahoo.co.jp/rss/topics/business.xml" },
+            {"スポーツ","https://news.yahoo.co.jp/rss/topics/sports.xml" },
+        };
+        
+        
+
         public Form1() {
             InitializeComponent();
+            
         }
 
         private async void btRssGet_ClickAsync(object sender, EventArgs e) {
             using (var wc = new HttpClient()) {
-                using HttpResponseMessage response = await wc.GetAsync(cbUrl.Text);
+                using HttpResponseMessage response = await wc.GetAsync(GetRssUrl(cbUrl.Text));
                 response.EnsureSuccessStatusCode();
                 string responseBody = await response.Content.ReadAsStringAsync();
                 XDocument xdoc = XDocument.Parse(responseBody);  //RSSの取得
@@ -30,6 +40,14 @@ namespace RssReader {
 
 
             }
+        }
+
+        //コンボボックスの文字列をチェックしてアクセス可能なURLを返却する
+        private string GetRssUrl(string text) {
+            if(rssUrlDict.ContainsKey(text)) {
+                return rssUrlDict[text];
+            }
+            return text;
         }
 
         //タイトルを選択したときに呼ばれるイベントハンドラ
@@ -60,15 +78,19 @@ namespace RssReader {
             btForward.Enabled = wvRssLink.CanGoForward;
         }
 
+        
 
+        private void Form1_Load(object sender, EventArgs e) {
+            cbUrl.DataSource = rssUrlDict.Select(k => k.Key).ToList();
+        }
 
         private void btfavorite_Click(object sender, EventArgs e) {
             if (cbUrl.Text == null) {
                 return;
-            } else if (cbUrl.Items.Contains(cbUrl.Text)) {
+            } else if (rssUrlDict.Keys.Contains(cbUrl.Text)) {
                 return;
             } else {
-                cbUrl.Items.Add(cbUrl.Text);
+                rssUrlDict.Add();
             }
         }
 
@@ -76,12 +98,6 @@ namespace RssReader {
             cbUrl.Items.Remove(cbUrl.Text);
         }
 
-        private void Form1_Load(object sender, EventArgs e) {
-            cbUrl.Items.Add(new ItemData {Title = "ビジネス", Link = "https://news.yahoo.co.jp/rss/topics/business.xml" });
-            cbUrl.Items.Add(new ItemData {Title = "IT", Link = "https://news.yahoo.co.jp/rss/topics/it.xml" });
-            cbUrl.Items.Add(new ItemData {Title = "国内", Link = "https://news.yahoo.co.jp/rss/topics/domestic.xml" });
-            cbUrl.Items.Add(new ItemData {Title = "サイエンス", Link = "https://news.yahoo.co.jp/rss/topics/science.xml" });
-            cbUrl.Items.Add(new ItemData {Title = "スポーツ", Link = "https://news.yahoo.co.jp/rss/topics/sports.xml" });
-        }
+        
     }
 }
