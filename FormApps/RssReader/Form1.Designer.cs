@@ -30,6 +30,7 @@
             btBack = new Button();
             btForward = new Button();
             btfavorite = new Button();
+            btfavoriteDelete = new Button();
             ((System.ComponentModel.ISupportInitialize)wvRssLink).BeginInit();
             SuspendLayout();
             // 
@@ -40,7 +41,6 @@
             cbUrl.Name = "cbUrl";
             cbUrl.Size = new Size(596, 33);
             cbUrl.TabIndex = 0;
-           
             // 
             // btRssGet
             // 
@@ -59,9 +59,9 @@
             lbTitles.Font = new Font("Yu Gothic UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 128);
             lbTitles.FormattingEnabled = true;
             lbTitles.ItemHeight = 21;
-            lbTitles.Location = new Point(12, 72);
+            lbTitles.Location = new Point(12, 114);
             lbTitles.Name = "lbTitles";
-            lbTitles.Size = new Size(400, 319);
+            lbTitles.Size = new Size(400, 529);
             lbTitles.TabIndex = 2;
             lbTitles.Click += lbTitles_Click;
             // 
@@ -71,9 +71,9 @@
             wvRssLink.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             wvRssLink.CreationProperties = null;
             wvRssLink.DefaultBackgroundColor = Color.White;
-            wvRssLink.Location = new Point(12, 402);
+            wvRssLink.Location = new Point(513, 114);
             wvRssLink.Name = "wvRssLink";
-            wvRssLink.Size = new Size(400, 370);
+            wvRssLink.Size = new Size(508, 529);
             wvRssLink.TabIndex = 4;
             wvRssLink.ZoomFactor = 1D;
             wvRssLink.NavigationCompleted += wvRssLink_NavigationCompleted;
@@ -103,7 +103,7 @@
             // btfavorite
             // 
             btfavorite.Font = new Font("Yu Gothic UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 128);
-            btfavorite.Location = new Point(919, 24);
+            btfavorite.Location = new Point(919, 25);
             btfavorite.Name = "btfavorite";
             btfavorite.Size = new Size(102, 32);
             btfavorite.TabIndex = 7;
@@ -111,11 +111,23 @@
             btfavorite.UseVisualStyleBackColor = true;
             btfavorite.Click += btfavorite_Click;
             // 
+            // btfavoriteDelete
+            // 
+            btfavoriteDelete.Font = new Font("Yu Gothic UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 128);
+            btfavoriteDelete.Location = new Point(838, 63);
+            btfavoriteDelete.Name = "btfavoriteDelete";
+            btfavoriteDelete.Size = new Size(183, 36);
+            btfavoriteDelete.TabIndex = 8;
+            btfavoriteDelete.Text = "お気に入り削除";
+            btfavoriteDelete.UseVisualStyleBackColor = true;
+            btfavoriteDelete.Click += btfavoriteDelete_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1056, 784);
+            Controls.Add(btfavoriteDelete);
             Controls.Add(btfavorite);
             Controls.Add(btForward);
             Controls.Add(btBack);
@@ -125,6 +137,7 @@
             Controls.Add(cbUrl);
             Name = "Form1";
             Text = "RssReader";
+            Load += Form1_Load;
             ((System.ComponentModel.ISupportInitialize)wvRssLink).EndInit();
             ResumeLayout(false);
         }
@@ -138,5 +151,6 @@
         private Button btBack;
         private Button btForward;
         private Button btfavorite;
+        private Button btfavoriteDelete;
     }
 }

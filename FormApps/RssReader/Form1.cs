@@ -60,16 +60,28 @@ namespace RssReader {
             btForward.Enabled = wvRssLink.CanGoForward;
         }
 
-        
+
 
         private void btfavorite_Click(object sender, EventArgs e) {
-            if(cbUrl.Text == null) {
+            if (cbUrl.Text == null) {
                 return;
-            } else if(cbUrl.Items.Contains(cbUrl.Text)){
+            } else if (cbUrl.Items.Contains(cbUrl.Text)) {
                 return;
             } else {
                 cbUrl.Items.Add(cbUrl.Text);
             }
+        }
+
+        private void btfavoriteDelete_Click(object sender, EventArgs e) {
+            cbUrl.Items.Remove(cbUrl.Text);
+        }
+
+        private void Form1_Load(object sender, EventArgs e) {
+            cbUrl.Items.Add(new ItemData {Title = "ビジネス", Link = "https://news.yahoo.co.jp/rss/topics/business.xml" });
+            cbUrl.Items.Add(new ItemData {Title = "IT", Link = "https://news.yahoo.co.jp/rss/topics/it.xml" });
+            cbUrl.Items.Add(new ItemData {Title = "国内", Link = "https://news.yahoo.co.jp/rss/topics/domestic.xml" });
+            cbUrl.Items.Add(new ItemData {Title = "サイエンス", Link = "https://news.yahoo.co.jp/rss/topics/science.xml" });
+            cbUrl.Items.Add(new ItemData {Title = "スポーツ", Link = "https://news.yahoo.co.jp/rss/topics/sports.xml" });
         }
     }
 }
