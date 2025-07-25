@@ -57,6 +57,7 @@
             // lbTitles
             // 
             lbTitles.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            lbTitles.DrawMode = DrawMode.OwnerDrawFixed;
             lbTitles.Font = new Font("Yu Gothic UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 128);
             lbTitles.FormattingEnabled = true;
             lbTitles.ItemHeight = 21;
@@ -65,6 +66,7 @@
             lbTitles.Size = new Size(400, 529);
             lbTitles.TabIndex = 2;
             lbTitles.Click += lbTitles_Click;
+            lbTitles.DrawItem += lbTitles_DrawItem_1;
             // 
             // wvRssLink
             // 
@@ -130,7 +132,6 @@
             tbFavoriteName.Name = "tbFavoriteName";
             tbFavoriteName.Size = new Size(382, 33);
             tbFavoriteName.TabIndex = 9;
-            
             // 
             // Form1
             // 
