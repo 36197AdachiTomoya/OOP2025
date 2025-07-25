@@ -24,7 +24,7 @@ namespace RssReader {
 
         private async void btRssGet_ClickAsync(object sender, EventArgs e) {
             using (var wc = new HttpClient()) {
-                if (urlCheck(cbUrl.Text)) {
+                if (urlCheck(GetRssUrl(cbUrl.Text))) {
                 } else {
                     MessageBox.Show("ê≥ÇµÇ≠Ç»Ç¢URLÇ≈Ç∑");
                     return;
