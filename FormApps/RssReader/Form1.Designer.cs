@@ -104,9 +104,9 @@
             // btfavorite
             // 
             btfavorite.Font = new Font("Yu Gothic UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 128);
-            btfavorite.Location = new Point(624, 63);
+            btfavorite.Location = new Point(624, 61);
             btfavorite.Name = "btfavorite";
-            btfavorite.Size = new Size(102, 32);
+            btfavorite.Size = new Size(102, 36);
             btfavorite.TabIndex = 7;
             btfavorite.Text = "お気に入り";
             btfavorite.UseVisualStyleBackColor = true;
@@ -117,7 +117,7 @@
             btfavoriteDelete.Font = new Font("Yu Gothic UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 128);
             btfavoriteDelete.Location = new Point(732, 61);
             btfavoriteDelete.Name = "btfavoriteDelete";
-            btfavoriteDelete.Size = new Size(183, 36);
+            btfavoriteDelete.Size = new Size(142, 36);
             btfavoriteDelete.TabIndex = 8;
             btfavoriteDelete.Text = "お気に入り削除";
             btfavoriteDelete.UseVisualStyleBackColor = true;
@@ -130,7 +130,7 @@
             tbFavoriteName.Name = "tbFavoriteName";
             tbFavoriteName.Size = new Size(382, 33);
             tbFavoriteName.TabIndex = 9;
-            tbFavoriteName.TextChanged += tbFavoriteName_TextChanged;
+            
             // 
             // Form1
             // 

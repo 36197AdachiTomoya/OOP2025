@@ -11,6 +11,10 @@ namespace RssReader {
             {"主要","https://news.yahoo.co.jp/rss/topics/top-picks.xml" },
             {"経済","https://news.yahoo.co.jp/rss/topics/business.xml" },
             {"スポーツ","https://news.yahoo.co.jp/rss/topics/sports.xml" },
+            {"科学","https://news.yahoo.co.jp/rss/topics/science.xml" },
+            {"IT","https://news.yahoo.co.jp/rss/topics/it.xml" },
+            {"エンタメ","https://news.yahoo.co.jp/rss/topics/entertainment.xml" },
+            {"国際","https://news.yahoo.co.jp/rss/topics/world.xml" },
         };
 
 
@@ -88,23 +92,26 @@ namespace RssReader {
         }
 
         private void btfavorite_Click(object sender, EventArgs e) {
-            if (cbUrl.Text == null || tbFavoriteName.Text == null) {
+            if (string.IsNullOrEmpty(cbUrl.Text) || string.IsNullOrEmpty(tbFavoriteName.Text)) {
                 return;
             } else if (rssUrlDict.Keys.Contains(tbFavoriteName.Text)) {
                 return;
             } else {
                 rssUrlDict.Add(tbFavoriteName.Text,cbUrl.Text);
-                cbUrl.DataSource = null;
                 cbUrl.DataSource = rssUrlDict.Keys.ToList();
             }
         }
 
         private void btfavoriteDelete_Click(object sender, EventArgs e) {
-            cbUrl.Items.Remove(cbUrl.Text);
+            if (string.IsNullOrEmpty(cbUrl.Text)) {
+                return;
+            } else if(rssUrlDict.ContainsKey(cbUrl.Text)){
+                rssUrlDict.Remove(cbUrl.Text);
+                tbFavoriteName.Text = null;
+                cbUrl.DataSource = rssUrlDict.Keys.ToList();
+            }
         }
 
-        private void tbFavoriteName_TextChanged(object sender, EventArgs e) {
-
-        }
+        
     }
 }
