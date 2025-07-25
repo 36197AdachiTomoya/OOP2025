@@ -77,9 +77,6 @@ namespace RssReader {
             bool hasSelection = lbTitles.SelectedIndex >= 0;
             btBack.Enabled = hasSelection && wvRssLink.CanGoBack;
             btForward.Enabled = hasSelection && wvRssLink.CanGoForward;
-
-            //btBack.Enabled = wvRssLink.CanGoBack;
-            //btForward.Enabled = wvRssLink.CanGoForward;
         }
 
 
@@ -87,15 +84,18 @@ namespace RssReader {
         private void Form1_Load(object sender, EventArgs e) {
             cbUrl.DataSource = rssUrlDict.Select(k => k.Key).ToList();
             GoForwardBtEnableSet();
+            cbUrl.Text = null;
         }
 
         private void btfavorite_Click(object sender, EventArgs e) {
-            if (cbUrl.Text == null) {
+            if (cbUrl.Text == null || tbFavoriteName.Text == null) {
                 return;
-            } else if (rssUrlDict.Keys.Contains(cbUrl.Text)) {
+            } else if (rssUrlDict.Keys.Contains(tbFavoriteName.Text)) {
                 return;
             } else {
-                //rssUrlDict.Add();
+                rssUrlDict.Add(tbFavoriteName.Text,cbUrl.Text);
+                cbUrl.DataSource = null;
+                cbUrl.DataSource = rssUrlDict.Keys.ToList();
             }
         }
 
