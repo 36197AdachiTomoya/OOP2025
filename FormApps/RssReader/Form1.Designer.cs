@@ -31,6 +31,7 @@
             btForward = new Button();
             btfavorite = new Button();
             btfavoriteDelete = new Button();
+            tbFavoriteName = new TextBox();
             ((System.ComponentModel.ISupportInitialize)wvRssLink).BeginInit();
             SuspendLayout();
             // 
@@ -103,7 +104,7 @@
             // btfavorite
             // 
             btfavorite.Font = new Font("Yu Gothic UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 128);
-            btfavorite.Location = new Point(919, 25);
+            btfavorite.Location = new Point(624, 63);
             btfavorite.Name = "btfavorite";
             btfavorite.Size = new Size(102, 32);
             btfavorite.TabIndex = 7;
@@ -114,7 +115,7 @@
             // btfavoriteDelete
             // 
             btfavoriteDelete.Font = new Font("Yu Gothic UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 128);
-            btfavoriteDelete.Location = new Point(838, 63);
+            btfavoriteDelete.Location = new Point(732, 61);
             btfavoriteDelete.Name = "btfavoriteDelete";
             btfavoriteDelete.Size = new Size(183, 36);
             btfavoriteDelete.TabIndex = 8;
@@ -122,11 +123,21 @@
             btfavoriteDelete.UseVisualStyleBackColor = true;
             btfavoriteDelete.Click += btfavoriteDelete_Click;
             // 
+            // tbFavoriteName
+            // 
+            tbFavoriteName.Font = new Font("Yu Gothic UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 128);
+            tbFavoriteName.Location = new Point(236, 63);
+            tbFavoriteName.Name = "tbFavoriteName";
+            tbFavoriteName.Size = new Size(382, 33);
+            tbFavoriteName.TabIndex = 9;
+            tbFavoriteName.TextChanged += tbFavoriteName_TextChanged;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1056, 784);
+            Controls.Add(tbFavoriteName);
             Controls.Add(btfavoriteDelete);
             Controls.Add(btfavorite);
             Controls.Add(btForward);
@@ -140,6 +151,7 @@
             Load += Form1_Load;
             ((System.ComponentModel.ISupportInitialize)wvRssLink).EndInit();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -152,5 +164,6 @@
         private Button btForward;
         private Button btfavorite;
         private Button btfavoriteDelete;
+        private TextBox tbFavoriteName;
     }
 }

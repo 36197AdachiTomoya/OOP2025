@@ -12,12 +12,12 @@ namespace RssReader {
             {"経済","https://news.yahoo.co.jp/rss/topics/business.xml" },
             {"スポーツ","https://news.yahoo.co.jp/rss/topics/sports.xml" },
         };
-        
-        
+
+
 
         public Form1() {
             InitializeComponent();
-            
+
         }
 
         private async void btRssGet_ClickAsync(object sender, EventArgs e) {
@@ -44,7 +44,7 @@ namespace RssReader {
 
         //コンボボックスの文字列をチェックしてアクセス可能なURLを返却する
         private string GetRssUrl(string text) {
-            if(rssUrlDict.ContainsKey(text)) {
+            if (rssUrlDict.ContainsKey(text)) {
                 return rssUrlDict[text];
             }
             return text;
@@ -56,7 +56,7 @@ namespace RssReader {
                 // インデックスが有効な範囲であることを確認
                 wvRssLink.Source = new Uri(items[lbTitles.SelectedIndex].Link);
             }
-            //wvRssLink.Source = new Uri(items[lbTitles.SelectedIndex].Link);
+           
         }
 
         //進む
@@ -74,14 +74,19 @@ namespace RssReader {
         }
 
         private void GoForwardBtEnableSet() {
-            btBack.Enabled = wvRssLink.CanGoBack;
-            btForward.Enabled = wvRssLink.CanGoForward;
+            bool hasSelection = lbTitles.SelectedIndex >= 0;
+            btBack.Enabled = hasSelection && wvRssLink.CanGoBack;
+            btForward.Enabled = hasSelection && wvRssLink.CanGoForward;
+
+            //btBack.Enabled = wvRssLink.CanGoBack;
+            //btForward.Enabled = wvRssLink.CanGoForward;
         }
 
-        
+
 
         private void Form1_Load(object sender, EventArgs e) {
             cbUrl.DataSource = rssUrlDict.Select(k => k.Key).ToList();
+            GoForwardBtEnableSet();
         }
 
         private void btfavorite_Click(object sender, EventArgs e) {
@@ -90,7 +95,7 @@ namespace RssReader {
             } else if (rssUrlDict.Keys.Contains(cbUrl.Text)) {
                 return;
             } else {
-                rssUrlDict.Add();
+                //rssUrlDict.Add();
             }
         }
 
@@ -98,6 +103,8 @@ namespace RssReader {
             cbUrl.Items.Remove(cbUrl.Text);
         }
 
-        
+        private void tbFavoriteName_TextChanged(object sender, EventArgs e) {
+
+        }
     }
 }
