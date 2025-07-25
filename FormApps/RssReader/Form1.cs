@@ -1,6 +1,7 @@
 using System.Net;
 using System.Xml.Linq;
 using static System.Net.WebRequestMethods;
+using System.Text.Json;
 
 namespace RssReader {
     public partial class Form1 : Form {
@@ -15,6 +16,7 @@ namespace RssReader {
             {"IT","https://news.yahoo.co.jp/rss/topics/it.xml" },
             {"ÉGÉìÉ^ÉÅ","https://news.yahoo.co.jp/rss/topics/entertainment.xml" },
             {"çëç€","https://news.yahoo.co.jp/rss/topics/world.xml" },
+            
         };
 
         public Form1() {
