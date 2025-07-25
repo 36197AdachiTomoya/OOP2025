@@ -24,6 +24,11 @@ namespace RssReader {
 
         private async void btRssGet_ClickAsync(object sender, EventArgs e) {
             using (var wc = new HttpClient()) {
+                if (urlCheck(cbUrl.Text)) {
+                } else {
+                    MessageBox.Show("ê≥ÇµÇ≠Ç»Ç¢URLÇ≈Ç∑");
+                    return;
+                }
                 using HttpResponseMessage response = await wc.GetAsync(GetRssUrl(cbUrl.Text));
                 response.EnsureSuccessStatusCode();
                 string responseBody = await response.Content.ReadAsStringAsync();
@@ -108,6 +113,13 @@ namespace RssReader {
             }
         }
 
+        private bool urlCheck(string url) {
+            if (Uri.IsWellFormedUriString(url, UriKind.Absolute)) {
+                return true;
+            }
+            return false;
+        }
+
         private void lbTitles_DrawItem_1(object sender, DrawItemEventArgs e) {
             var idx = e.Index;                                                      //ï`âÊëŒè€ÇÃçs
             if (idx == -1) return;                                                  //îÕàÕäOÇ»ÇÁâΩÇ‡ÇµÇ»Ç¢
@@ -135,5 +147,6 @@ namespace RssReader {
             e.Graphics.DrawString(txt, fnt, bsh, bnd);
         }
     }
-    }
+    
 }
+
