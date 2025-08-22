@@ -2,6 +2,7 @@ using System.Net;
 using System.Xml.Linq;
 using static System.Net.WebRequestMethods;
 using System.Text.Json;
+using System.IO;
 
 namespace RssReader {
     public partial class Form1 : Form {
@@ -18,6 +19,20 @@ namespace RssReader {
             {"çëç€","https://news.yahoo.co.jp/rss/topics/world.xml" },
             
         };
+
+        private readonly string favoriteFilePath = "favorites.json";
+
+        private void SaveFavoritesToFile() {
+            var json = JsonSerializer.Serialize(rssUrlDict);
+            System.IO.File.WriteAllText(favoriteFilePath, json);
+        }
+
+        private void LoadFavoritesFromFile() {
+            if (System.IO.File.Exists(favoriteFilePath)) {
+                string json = System.IO.File.ReadAllText(favoriteFilePath);
+                rssUrlDict = JsonSerializer.Deserialize<Dictionary<string, string>>(json);
+            }
+        }
 
         public Form1() {
             InitializeComponent();
@@ -92,6 +107,10 @@ namespace RssReader {
             cbUrl.DataSource = rssUrlDict.Select(k => k.Key).ToList();
             GoForwardBtEnableSet();
             cbUrl.Text = null;
+            LoadFavoritesFromFile();  // ÉtÉ@ÉCÉãÇ©ÇÁì«Ç›çûÇ›
+            cbUrl.DataSource = rssUrlDict.Keys.ToList();
+            GoForwardBtEnableSet();
+            cbUrl.Text = null;
         }
 
         private void btfavorite_Click(object sender, EventArgs e) {
@@ -102,6 +121,8 @@ namespace RssReader {
             } else {
                 rssUrlDict.Add(tbFavoriteName.Text, cbUrl.Text);
                 cbUrl.DataSource = rssUrlDict.Keys.ToList();
+
+
             }
         }
 
@@ -112,6 +133,8 @@ namespace RssReader {
                 rssUrlDict.Remove(cbUrl.Text);
                 tbFavoriteName.Text = null;
                 cbUrl.DataSource = rssUrlDict.Keys.ToList();
+                SaveFavoritesToFile();
+
             }
         }
 
