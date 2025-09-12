@@ -50,13 +50,13 @@
                        VerticalAlignment="Center"/>
             <ComboBox x:Name="comboBox"
                       Grid.Column="1"
-                      Grid.Row="3" Width="150"
+                      Grid.Row="2" Width="150"
                       Height="40"
-                      HorizontalAlignment="Center"
-                      VerticalAlignment="Center"
+                      HorizontalAlignment="Left"
+                      VerticalAlignment="Top"
                       ItemsSource="{Binding}"
                       SelectedValue="{Binding Color}"
-                      SelectionChanged="colorSelectionComboBox_SelectionChanged">
+                      SelectionChanged="colorSelectionComboBox_SelectionChanged" Margin="10,93,0,0" Grid.RowSpan="2">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <Border Width="80" Height="Auto" Margin="5,0" BorderThickness="1" BorderBrush="Black" >
@@ -95,7 +95,7 @@
                      Text="{Binding ElementName=rSlider
                             ,Path=Value,Mode=TwoWay
                             ,UpdateSourceTrigger=PropertyChanged
-                            ,StringFormat={}{0:0}}" TextChanged="rTextBox_TextChanged"/>
+                            ,StringFormat={}{0:0}}"/>
             <TextBox x:Name="gTextBox"
                      Grid.Column="2"
                      Grid.Row="1"
@@ -127,6 +127,15 @@
             </Grid.RowDefinitions>
             <!--３枚目-->
             <Button x:Name="Stock" FontSize="25" Content="Stock" HorizontalAlignment="Center" VerticalAlignment="Center" Width="200" Height="50" Click="Stock_Click"/>
+            <Button 
+                x:Name="DeleteButton" 
+                Content="Delete" 
+                FontSize="25" 
+                Width="149" 
+                Height="36" 
+                HorizontalAlignment="Left" 
+                VerticalAlignment="Top" 
+                Click="DeleteButton_Click" Margin="-205,300,0,0" Grid.Row="1"/>
             <ListBox x:Name="Record" Grid.Row="1" d:ItemsSource="{d:SampleData ItemCount=5}" Width="250" Height="350" FontSize="20" SelectionChanged="Record_SelectionChanged"/>
 
 

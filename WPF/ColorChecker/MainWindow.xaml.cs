@@ -15,9 +15,9 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace ColorChecker {
-    /// <summary>
+    /// <summar>
     /// MainWindow.xaml の相互作用ロジック
-    /// </summary>
+    /// </summar>
     public partial class MainWindow : Window {
         public MainWindow() {
             InitializeComponent();
@@ -39,7 +39,19 @@ namespace ColorChecker {
             byte g = (byte)gSlider.Value;
             byte b = (byte)bSlider.Value;
 
-            string rgbColor = $"{r},{g},{b}";
+            Color color = Color.FromRgb(r, g, b);
+            MyColor[] tempcolor = GetColorList();
+            string rgbColor = "";
+            foreach (MyColor c in tempcolor) {
+                if(color == c.Color) {
+                    rgbColor = c.Name;
+                    break;
+                }
+            }
+
+            if (string.IsNullOrEmpty(rgbColor)) {
+                rgbColor = $"R:{r} G:{g} B:{b}";
+            }
 
             if (Record.Items.Contains(rgbColor)) {
                 MessageBox.Show("すでに同じ色が登録されています。");
@@ -47,8 +59,6 @@ namespace ColorChecker {
                 Record.Items.Add(rgbColor);
             }
         }
-
-
 
         private void setSliderValue(Color color) {
             rSlider.Value = color.R;
@@ -67,6 +77,20 @@ namespace ColorChecker {
                 // 例: "255,0,0"
                 var s = rgbColor.Split(',');
 
+                if(Record.SelectedItem == null) {
+                    return;
+                }
+
+                MyColor[] colors = GetColorList();
+                string record = Record.SelectedItem.ToString();
+                foreach (MyColor c in colors) {
+                    if (c.Name == record) {
+                        var color = c.Color;
+                        setSliderValue(color);
+                        return;
+                    }
+                }
+
                 if (s.Length == 3
                     && byte.TryParse(s[0], out byte r)
                     && byte.TryParse(s[1], out byte g)
@@ -76,13 +100,16 @@ namespace ColorChecker {
                     rSlider.Value = r;
                     gSlider.Value = g;
                     bSlider.Value = b;
-
                 }
             }
         }
 
-        private void rTextBox_TextChanged(object sender, TextChangedEventArgs e) {
+        
 
+        private void DeleteButton_Click(object sender, RoutedEventArgs e) {
+            if (Record.SelectedItem is string selectedColor) {
+                Record.Items.Remove(selectedColor);
+            }
         }
     }
 }
