@@ -32,6 +32,8 @@ namespace ColorChecker {
         private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
             colorArea.Background = new SolidColorBrush
                         (Color.FromRgb((byte)rSlider.Value, (byte)gSlider.Value, (byte)bSlider.Value));
+
+           
         }
 
         private void Stock_Click(object sender, RoutedEventArgs e) {
