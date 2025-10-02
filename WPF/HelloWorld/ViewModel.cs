@@ -12,25 +12,15 @@ namespace HelloWorld {
 
         public ViewModel() {
             ChangeMessageCommand = new DelegateCommand<string>(
-                (par) => GreetingMessage = par
-                );
+                (par) => GreetingMessage = par,
+                (par) => GreetingMessage != par)
+                .ObservesProperty(() => GreetingMessage);
         }
 
         private string _greetingMessage = "Hello World";
         public string GreetingMessage {
             get => _greetingMessage;
-            set 
-                {
-                if (SetProperty(ref _greetingMessage, value)) {
-                    CanChangeMessage = false;
-                }
-            }
-        }
-
-        private bool _canChangeMessaage = true;
-        public bool CanChangeMessage {
-            get => _canChangeMessaage;
-            private set => SetProperty(ref _canChangeMessaage,value);
+            set => SetProperty(ref _greetingMessage, value);
         }
 
         public string NewMessage1 { get; } = "Bye-bye world";
