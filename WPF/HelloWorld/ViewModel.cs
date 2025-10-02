@@ -11,17 +11,30 @@ namespace HelloWorld {
 
 
         public ViewModel() {
-            ChangeMessageCommand = new DelegateCommand(
-                () => GreetingMessage = "Bye-bye world"
+            ChangeMessageCommand = new DelegateCommand<string>(
+                (par) => GreetingMessage = par
                 );
         }
 
         private string _greetingMessage = "Hello World";
         public string GreetingMessage {
             get => _greetingMessage;
-            set => SetProperty(ref _greetingMessage, value);
+            set 
+                {
+                if (SetProperty(ref _greetingMessage, value)) {
+                    CanChangeMessage = false;
+                }
+            }
         }
 
-        public DelegateCommand ChangeMessageCommand { get; }
+        private bool _canChangeMessaage = true;
+        public bool CanChangeMessage {
+            get => _canChangeMessaage;
+            private set => SetProperty(ref _canChangeMessaage,value);
+        }
+
+        public string NewMessage1 { get; } = "Bye-bye world";
+        public string NewMessage2 { get; } = "Long time no see, world!";
+        public DelegateCommand<string> ChangeMessageCommand { get; }
     }
 }
