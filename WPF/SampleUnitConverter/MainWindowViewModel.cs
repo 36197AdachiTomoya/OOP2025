@@ -40,6 +40,8 @@ namespace SampleUnitConverter {
         }
 
         public MainWindowViewModel() {
+            CurrentMetricUnit = MetricUnit.Units.First();
+            CurrentImperialUnit = ImperialUnit.Units.First(); 
 
             ImperialUnitToMetric = new DelegateCommand(
                 ()=>  MetricValue = 
