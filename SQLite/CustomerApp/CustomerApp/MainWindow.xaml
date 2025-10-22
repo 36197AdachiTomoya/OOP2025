@@ -64,7 +64,7 @@
                  HorizontalAlignment="Left" Margin="5"/>
             <UniformGrid Columns="2" Margin="5,10,5,10" HorizontalAlignment="Left" Width="300">
                 <Button Content="保存" x:Name="SaveButton" Click="SaveButton_Click" Width="150"/>
-                <Button Content="更新" x:Name="RefreshButton" Click="RefreshButton_Click" />
+                <Button Content="更新" x:Name="RefreshButton" Click="RefreshButton_Click" Width="150"/>
                 <Button Content="削除" x:Name="DeleteButton" Click="DeleteButton_Click" Width="150"/>
                 <Button Content="画像" x:Name="ImageButton" Click="ImageButton_Click" Width="150"/>
             </UniformGrid>
