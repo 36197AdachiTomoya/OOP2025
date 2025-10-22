@@ -135,15 +135,15 @@ namespace CustomerApp {
                         if (connection.Delete<Customer>(selectedCustomer.Id) > 0) {
                             _customer.Remove(selectedCustomer);
                         } else {
-                            MessageBox.Show("データベースに該当の顧客が見つかりませんでした。");
+                            MessageBox.Show("データベースに該当の顧客が見つける気がありませんでした。");
                         }
                     }
                 }
                 catch (Exception ex) {
-                    MessageBox.Show("削除中にエラーが発生しました: " + ex.Message);
+                    
                 }
             } else {
-                MessageBox.Show("削除するアイテムを選択してください。");
+                
             }
         }
 
