@@ -5,14 +5,91 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CustomerApp" SizeToContent="Height"
         mc:Ignorable="d"
-        Title="MainWindow" Height="1000" Width="800">
+        Title="顧客管理アプリ" Height="1000" Width="900" Background="#F0F4F8">
+
     <Window.Resources>
         <local:ByteArrayToImageConverter x:Key="ByteArrayToImageConverter"/>
+        <Style TargetType="Button">
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Padding" Value="8,5"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Background" Value="#4A90E2"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="#3A78C2"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Width" Value="100"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" 
+                                CornerRadius="4">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#357ABD"/>
+                    <Setter Property="BorderBrush" Value="#2A5F9D"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#2D5F9D"/>
+                    <Setter Property="BorderBrush" Value="#234C7A"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
     </Window.Resources>
-    <Grid>
-        <Border Width="300" Height="200" BorderBrush="Black" BorderThickness="2" CornerRadius="5"
-        HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,150,300,0">
-            <Image x:Name="CustomerImage" Width="300" Height="200" Stretch="Uniform" RenderTransformOrigin="0.51,0.5">
+
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <!-- 左側：入力フォーム・リスト -->
+            <ColumnDefinition Width="320" />
+            <!-- 右側：画像表示用 -->
+        </Grid.ColumnDefinitions>
+
+        <!-- 左側 -->
+        <StackPanel Grid.Column="0" Margin="0,0,10,0">
+            <TextBox x:Name="NameTextBox" Text="名前：" Height="30" Width="400" 
+                 HorizontalAlignment="Left" Margin="5"/>
+            <TextBox x:Name="PhoneTextBox" Text="電話番号：" Height="30" Width="400" 
+                 HorizontalAlignment="Left" Margin="5"/>
+            <TextBox x:Name="AddressTextBox" Text="住所：" Height="30" Width="400" 
+                 HorizontalAlignment="Left" Margin="5"/>
+            <UniformGrid Columns="2" Margin="5,10,5,10" HorizontalAlignment="Left" Width="300">
+                <Button Content="保存" x:Name="SaveButton" Click="SaveButton_Click" Width="150"/>
+                <Button Content="取得" x:Name="ReadButton" Click="ReadButton_Click" Width="150"/>
+                <Button Content="削除" x:Name="DeleteButton" Click="DeleteButton_Click" Width="150"/>
+                <Button Content="画像" x:Name="ImageButton" Click="ImageButton_Click" Width="150"/>
+            </UniformGrid>
+
+            <ListView x:Name="CustomerListView" Margin="0,5,0,0" Height="471" >
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal" Margin="5">
+                            <Image Width="100" Height="80" Stretch="UniformToFill" 
+                               Source="{Binding Image, Converter={StaticResource ByteArrayToImageConverter}}" />
+                            <StackPanel>
+                                <TextBlock Text="{Binding Id}" />
+                                <TextBlock Text="{Binding Name}" FontSize="20" />
+                                <TextBlock Text="{Binding Phone}" />
+                                <TextBlock Text="{Binding Address}" />
+                            </StackPanel>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackPanel>
+
+        <!-- 右側：画像表示 -->
+        <Border Grid.Column="1" Width="300" Height="240" BorderBrush="Black" BorderThickness="2" CornerRadius="5" HorizontalAlignment="Center" VerticalAlignment="Top" >
+            <Image x:Name="CustomerImage" Width="300" Height="240" Stretch="Uniform" RenderTransformOrigin="0.51,0.5">
                 <Image.RenderTransform>
                     <TransformGroup>
                         <ScaleTransform/>
@@ -24,37 +101,6 @@
             </Image>
         </Border>
 
-        <StackPanel Margin="10">
-
-            <TextBox x:Name="NameTextBox" Text="名前：" Height="30" Width="400" 
-                     HorizontalAlignment="Left" Margin="5"/>
-            <TextBox x:Name="PhoneTextBox" Text="電話番号：" Height="30" Width="400" 
-                     HorizontalAlignment="Left" Margin="5"/>
-            <TextBox x:Name="AddressTextBox" Text="住所：" Height="30" Width="400" 
-                     HorizontalAlignment="Left" Margin="5"/>
-            <Button Content="保存" FontSize="24" x:Name="SaveButton" Click="SaveButton_Click" Height="50" Width="100" HorizontalAlignment="Left" Margin="5"/>
-            <Button Content="取得" FontSize="24" x:Name="ReadButton" Click="ReadButton_Click" Height="50" Width="100" HorizontalAlignment="Left" Margin="5"/>
-            <Button Content="削除" FontSize="24" x:Name="DeleteButton" Click="DeleteButton_Click" Height="50" Width="100" HorizontalAlignment="Left" Margin="5"/>
-            <Button Content="画像" FontSize="24" x:Name="ImageButton" Click="ImageButton_Click" Height="50" Width="100" HorizontalAlignment="Left" Margin="5"/>
-            <ListView x:Name="CustomerListView" Margin="0,5,0,0" Height="471">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Horizontal" Margin="5">
-                            <!-- 画像表示 -->
-                                <Image Width="100" Height="80" Stretch="UniformToFill" 
-                                 Source="{Binding Image, Converter={StaticResource ByteArrayToImageConverter}}" />
-                            <!-- テキスト情報 -->
-                            <StackPanel>
-                                <TextBlock Text="{Binding Id}" />
-                                <TextBlock Text="{Binding Name}" FontSize="20" />
-                                <TextBlock Text="{Binding Phone}" />
-                                <TextBlock Text="{Binding Address}" />
-                            </StackPanel>
-                        </StackPanel>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-
-            </ListView>
-        </StackPanel>
     </Grid>
+
 </Window>
