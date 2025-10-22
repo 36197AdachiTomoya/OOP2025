@@ -51,10 +51,12 @@ namespace CustomerApp {
                 connection.Insert(customer);
             }
 
-            MessageBox.Show("顧客情報と画像を保存しました。");
+            // 保存後に一覧を更新する
+            RefreshCustomerList();
         }
 
-        private void ReadButton_Click(object sender, RoutedEventArgs e) {
+        // 顧客一覧を読み込み、_customerコレクションを更新するメソッド
+        private void RefreshCustomerList() {
             using (var connection = new SQLiteConnection(App.databasePath)) {
                 var customers = connection.Table<Customer>().ToList();
 
@@ -62,10 +64,14 @@ namespace CustomerApp {
                 foreach (var customer in customers) {
                     _customer.Add(customer);
                 }
-
-                CustomerListView.ItemsSource = _customer;
             }
         }
+
+
+        private void RefreshButton_Click(object sender, RoutedEventArgs e) {
+            RefreshCustomerList();
+        }
+
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e) {
             var selectedCustomer = CustomerListView.SelectedItem as Customer;
