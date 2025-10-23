@@ -56,12 +56,18 @@
 
         <!-- 左側 -->
         <StackPanel Grid.Column="0" Margin="0,0,10,0">
-            <TextBox x:Name="NameTextBox" Text="名前：" Height="30" Width="400" 
-                 HorizontalAlignment="Left" Margin="5"/>
-            <TextBox x:Name="PhoneTextBox" Text="電話番号：" Height="30" Width="400" 
-                 HorizontalAlignment="Left" Margin="5"/>
-            <TextBox x:Name="AddressTextBox" Text="住所：" Height="30" Width="400" 
-                 HorizontalAlignment="Left" Margin="5"/>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="名前：" VerticalAlignment="Center" Margin="5" Width="80"/>
+                <TextBox x:Name="NameTextBox" Height="30" Width="400" HorizontalAlignment="Left" Margin="5"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="電話番号：" VerticalAlignment="Center" Margin="5" Width="80"/>
+                <TextBox x:Name="PhoneTextBox" Height="30" Width="400" HorizontalAlignment="Left" Margin="5"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+        <TextBlock Text="住所：" VerticalAlignment="Center" Margin="5" Width="80"/>
+        <TextBox x:Name="AddressTextBox" Height="30" Width="400" HorizontalAlignment="Left" Margin="5"/>
+    </StackPanel>
             <UniformGrid Columns="2" Margin="5,10,5,10" HorizontalAlignment="Left" Width="300">
                 <Button Content="保存" x:Name="SaveButton" Click="SaveButton_Click" Width="150"/>
                 <Button Content="更新" x:Name="RefreshButton" Click="RefreshButton_Click" Width="150"/>
