@@ -58,7 +58,7 @@ namespace Exercise01 {
                                      , book => book.CategoryId
                                      , category => category.Id
                                      , (book, category) => category.Name
-                                 );
+                                 ).Distinct();
 
 
 
