@@ -25,6 +25,17 @@ namespace CustomerApp {
             InitializeComponent();
             CustomerListView.ItemsSource = _customer;
             CustomerListView.SelectionChanged += CustomerListView_SelectionChanged;
+
+            CreateCustomerTable();
+
+            RefreshCustomerList();
+
+        }
+
+        private void CreateCustomerTable() {
+            using (var connection = new SQLiteConnection(App.databasePath)) {
+                connection.CreateTable<Customer>(); // 顧客テーブルがなければ作成
+            }
         }
 
         private void CustomerListView_SelectionChanged(object sender, SelectionChangedEventArgs e) {
@@ -146,6 +157,7 @@ namespace CustomerApp {
                 
             }
         }
+
 
 
         private void ImageButton_Click(object sender, RoutedEventArgs e) {
