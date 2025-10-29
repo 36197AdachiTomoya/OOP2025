@@ -60,15 +60,23 @@ namespace Exercise01 {
                                      , (book, category) => category.Name
                                  ).Distinct();
 
-
-
             foreach (var book in books) {
                 Console.WriteLine(book);
             }
         }
 
         private static void Exercise1_6() {
-            
+            var books = Library.Books
+                            .Join(Library.Categories
+                            , book => book.CategoryId
+                            , category => category.Id
+                            , (book, category) => category.Name
+                            ).GroupBy(x => x)
+                             .OrderBy(x => x.Key);
+
+            foreach (var book in books) {
+                Console.WriteLine(book.Key);
+            }
         }
 
         private static void Exercise1_7() {
