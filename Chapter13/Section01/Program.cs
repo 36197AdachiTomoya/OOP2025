@@ -9,8 +9,13 @@
                                          Category = c.Name,
                                          Books = books,
                                      });
-                                       
-            
+
+            foreach (var group in books) {
+                Console.WriteLine();
+                foreach (var book in group.Books) {
+                    Console.WriteLine($"   {book.Title}({book.PublishedYear})年");
+                }
+            }
         }
     }
 }

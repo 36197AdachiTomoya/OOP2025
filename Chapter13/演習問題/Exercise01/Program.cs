@@ -108,7 +108,19 @@ namespace Exercise01 {
         }
 
         private static void Exercise1_8() {
-            
+            var categoryName = Library.Categories
+                            .GroupJoin(Library.Books
+                                     , c => c.Id
+                                     , b => b.CategoryId
+                                     , (c, books) => new {
+                                         categoryName = c.Name,
+                                         count = books.Count(),
+                                     })
+                            .Where(x => x.count >= 4)
+                            .Select(x => x.categoryName);
+            foreach (var name in categoryName) {
+                Console.WriteLine(name);
+            }
         }
     }
 }
