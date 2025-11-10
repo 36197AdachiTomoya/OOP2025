@@ -6,7 +6,7 @@ namespace CountClass {
     internal class Program {
         static void Main(string[] args) {
             string filePath = "source.txt";
-            var lines = File.ReadAllLines(filePath); 
+            var lines = File.ReadLines(filePath); 
 
             int cnt = 0;
 
