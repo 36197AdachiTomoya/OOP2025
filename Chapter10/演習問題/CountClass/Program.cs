@@ -1,19 +1,24 @@
-﻿namespace CountClass {
+﻿using System;
+using System.IO;
+using System.Linq;
+
+namespace CountClass {
     internal class Program {
         static void Main(string[] args) {
             string filePath = "source.txt";
-            using (StreamReader reader = new StreamReader(filePath)) {
-                string? line;
-                int cnt = 0;
-                while((line = reader.ReadLine()) != null) {
-                    string[] text = line.Split(' ');
-                    int c = text.ToList().Where(s => s.Trim() == "class").Count();
-                    if(c > 0) {
-                        cnt++;
-                    }
+            var lines = File.ReadAllLines(filePath); 
+
+            int cnt = 0;
+
+            foreach (string line in lines) {
+                string[] text = line.Split('　'); 
+                int c = text.Count(s => s.Trim() == "class"); 
+                if (c > 0) {
+                    cnt++;
                 }
-                Console.WriteLine(cnt);
             }
+
+            Console.WriteLine(cnt);
         }
     }
 }
