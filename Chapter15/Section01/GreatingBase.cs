@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Section01 {
-    abstract class GreatingBase {
-        public virtual string GetMessage() => "";
+        interface IGreatingBase {
+        string GetMessage();
     }
 }

@@ -1,7 +1,7 @@
 ﻿namespace Section01 {
     internal class Program {
         static void Main(string[] args) {
-            List<GreatingBase> list = [
+            List<IGreatingBase> list = [
                 new GreatingMorning(),
                 new GreatingAfternoon(),
                 new GreatingEvening(),
@@ -14,16 +14,16 @@
         }
     }
 
-    class GreatingMorning : GreatingBase{
-        public override string GetMessage() => "おはよう";
+    class GreatingMorning : IGreatingBase{
+        public string GetMessage() => "おはよう";
     }
 
-    class GreatingAfternoon : GreatingBase {
-        public override string GetMessage() => "こんにちは";
+    class GreatingAfternoon : IGreatingBase {
+        public string GetMessage() => "こんにちは";
     }
 
-    class GreatingEvening : GreatingBase {
-        public override string GetMessage() => "こんばんは";
+    class GreatingEvening : IGreatingBase {
+        public string GetMessage() => "こんばんは";
     }
 
 }
