@@ -6,11 +6,12 @@
 
             var lines = File.ReadAllLines(filePath2);
 
-            using (var writer = new StreamWriter(filePath, append : true)) {
-                foreach (var line in  lines) {
+            using (var writer = new StreamWriter(filePath, append: true)) {
+                foreach (var line in lines) {
                     writer.WriteLine(line);
                 }
             }
+
         }
     }
 }
