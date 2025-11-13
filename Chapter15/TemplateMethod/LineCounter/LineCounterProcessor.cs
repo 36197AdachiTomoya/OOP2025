@@ -8,18 +8,18 @@ using TextFileProcessor;
 namespace LineCounter {
     internal class LineCounterProcessor : TextProcessor{
         private int _count = 0;
-        string text = string.Empty;
+        string word = string.Empty;
 
 
 
         protected override void Initialize(string fname) {
-            Console.Write("入力：");
-            text = Console.ReadLine() ?? string.Empty;
+            Console.Write("検索ワードの入力：");
+            word = Console.ReadLine() ?? string.Empty;
             _count = 0;
         } 
 
         protected override void Execute(string line) {
-            if (line.Contains(text)) {
+            if (line.Contains(word)) {
                 _count++;
             }
         } 
