@@ -7,18 +7,19 @@ using System.Threading.Tasks;
 namespace TextFileProcessorDI {
     internal class LineToHalfNumberService : ITextFileService {
         private int _count;
+        private string? str;
         public void Initialize(string fname) {
             _count = 0;
         }
 
         public void Execute(string line) {
             _count++;
-            string str = line.Normalize(NormalizationForm.FormKD);
-            Console.WriteLine(str);
+            str = line.Normalize(NormalizationForm.FormKD);
+            
         }
 
         public void Terminate() {
-            
+            Console.WriteLine(str);
         }
     }
 }
