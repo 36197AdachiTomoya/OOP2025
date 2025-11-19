@@ -14,8 +14,13 @@ namespace TextFileProcessorDI {
 
         public void Execute(string line) {
             _count++;
-            str = line.Normalize(NormalizationForm.FormKD);
-            
+            str = new string(
+                line.Select(c =>
+            (c >= '０' && c <= '９') ? (char)('0' + (c - '０'))   
+                : c                          
+        ).ToArray()
+    );
+
         }
 
         public void Terminate() {
