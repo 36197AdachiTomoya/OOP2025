@@ -18,13 +18,14 @@ namespace TextFileProcessorDI {
                 line.Select(c =>
             (c >= '０' && c <= '９') ? (char)('0' + (c - '０'))   
                 : c                          
-        ).ToArray()
-    );
+            ).ToArray()
+            );
 
+            Console.WriteLine(str);
         }
 
         public void Terminate() {
-            Console.WriteLine(str);
+            
         }
     }
 }
