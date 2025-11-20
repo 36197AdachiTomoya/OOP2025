@@ -1,0 +1,15 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace WeatherApp {
+    public class Current {
+        public string time { get; set; } = string.Empty;
+        public double temperature_2m {  get; set; }
+        public double wind_speed_10m {  get; set; }
+        public double relative_humidity_2m {  get; set; } //湿度
+        public double apparent_Temperature {  get; set; }
+    }
+}
