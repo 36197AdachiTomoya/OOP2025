@@ -1,13 +1,14 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows;
-using Microsoft.Web.WebView2.Core;
+using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace TenkiApp {
     public partial class MainWindow : Window {
+        // HttpClient インスタンスを追加
         private readonly HttpClient _http = new HttpClient();
         private bool _webViewInitialized = false;
 
@@ -16,11 +17,50 @@ namespace TenkiApp {
             InitializeWebView2();
         }
 
+        // WebView2 初期化処理
         private async void InitializeWebView2() {
-            await MapBrowser.EnsureCoreWebView2Async();
-            _webViewInitialized = true;
+            try {
+                // WebView2 の初期化を待つ
+                await MapBrowser.EnsureCoreWebView2Async();
+
+                // WebView2 初期化後にHTMLを埋め込む
+                string html = @"
+<!DOCTYPE html>
+<html lang='ja'>
+<head>
+    <meta charset='utf-8'/>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'/>
+    <link rel='stylesheet' href='https://unpkg.com/leaflet/dist/leaflet.css'/>
+    <script src='https://unpkg.com/leaflet/dist/leaflet.js'></script>
+    <style>
+        #map { height: 100%; width: 100%; margin: 0; padding: 0; }
+    </style>
+</head>
+<body>
+    <div id='map'></div>
+    <script>
+        var map = L.map('map').setView([36.0, 138.0], 5);  // 初期位置とズームレベル
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
+
+        // マーカーを追加する関数
+        function addMarker(lat, lon, name) {
+            var marker = L.marker([lat, lon]).addTo(map).bindPopup(name);
+            map.setView([lat, lon], 10);  // マーカー追加後にズームイン
+        }
+    </script>
+</body>
+</html>";
+
+                // HTMLをWebView2に埋め込む
+                MapBrowser.NavigateToString(html);
+                _webViewInitialized = true;
+            }
+            catch (Exception ex) {
+                MessageBox.Show($"WebView2の初期化に失敗しました: {ex.Message}");
+            }
         }
 
+        // 検索ボタンを押したときの処理
         private async void FetchButton_Click(object sender, RoutedEventArgs e) {
             string place = LocationTextBox.Text.Trim();
             if (string.IsNullOrEmpty(place)) {
@@ -36,58 +76,59 @@ namespace TenkiApp {
 
             double lat = coords.Value.lat;
             double lon = coords.Value.lon;
-            LocationNameText.Text = $"場所: {coords.Value.displayName}";
+            string name = coords.Value.displayName;
+            LocationNameText.Text = $"場所: {name}";
 
             await UpdateWeather(lat, lon);
 
-            // WebView2 が初期化されてから地図を表示
-            if (_webViewInitialized)
-                ShowLocationOnMap(lat, lon, coords.Value.displayName);
-            else
-                MapBrowser.CoreWebView2InitializationCompleted += (s, ev) => {
-                    ShowLocationOnMap(lat, lon, coords.Value.displayName);
-                };
-        }
-
-        private async Task<(double lat, double lon, string displayName)?> GetLatLon(string placeName) {
-            string url = $"https://nominatim.openstreetmap.org/search?q={Uri.EscapeDataString(placeName + " 日本")}&format=json&limit=10&addressdetails=1";
-            var request = new HttpRequestMessage(HttpMethod.Get, url);
-            request.Headers.Add("User-Agent", "TenkiApp/1.0");
-            var resp = await _http.SendAsync(request);
-            if (!resp.IsSuccessStatusCode) return null;
-
-            var json = await resp.Content.ReadAsStringAsync();
-            using var doc = JsonDocument.Parse(json);
-            var arr = doc.RootElement;
-            if (arr.ValueKind != JsonValueKind.Array || arr.GetArrayLength() == 0) return null;
-
-            foreach (var item in arr.EnumerateArray()) {
-                if (!item.TryGetProperty("address", out var address)) continue;
-                if (!address.TryGetProperty("country", out var country) || country.GetString() != "Japan") continue;
-
-                if (address.TryGetProperty("city", out var _) ||
-                    address.TryGetProperty("town", out var _) ||
-                    address.TryGetProperty("village", out var _) ||
-                    address.TryGetProperty("state", out var _)) {
-                    double lat = double.Parse(item.GetProperty("lat").GetString(), CultureInfo.InvariantCulture);
-                    double lon = double.Parse(item.GetProperty("lon").GetString(), CultureInfo.InvariantCulture);
-                    string displayName = item.GetProperty("display_name").GetString();
-                    return (lat, lon, displayName);
-                }
+            // WebView2 が初期化されていればマーカーを追加
+            if (_webViewInitialized) {
+                AddMarkerToMap(lat, lon, name);
+            } else {
+                MessageBox.Show("地図の初期化が完了していません。再試行してください。");
             }
-
-            var first = arr[0];
-            double fLat = double.Parse(first.GetProperty("lat").GetString(), CultureInfo.InvariantCulture);
-            double fLon = double.Parse(first.GetProperty("lon").GetString(), CultureInfo.InvariantCulture);
-            string fName = first.GetProperty("display_name").GetString();
-            return (fLat, fLon, fName);
         }
 
+        // 地図にマーカーを追加するメソッド
+        private void AddMarkerToMap(double lat, double lon, string name) {
+            MapBrowser.CoreWebView2.ExecuteScriptAsync(
+                $"addMarker({lat.ToString(CultureInfo.InvariantCulture)}, {lon.ToString(CultureInfo.InvariantCulture)}, '{name}');"
+            );
+        }
+
+        // 地名から緯度経度を取得
+        private async Task<(double lat, double lon, string displayName)?> GetLatLon(string placeName) {
+            try {
+                string url = $"https://nominatim.openstreetmap.org/search?q={Uri.EscapeDataString(placeName + " 日本")}&format=json&limit=1";
+                var req = new HttpRequestMessage(HttpMethod.Get, url);
+                req.Headers.Add("User-Agent", "TenkiApp/1.0");
+                var resp = await _http.SendAsync(req);
+                if (!resp.IsSuccessStatusCode) return null;
+
+                var json = await resp.Content.ReadAsStringAsync();
+                using var doc = JsonDocument.Parse(json);
+                var arr = doc.RootElement;
+                if (arr.ValueKind != JsonValueKind.Array || arr.GetArrayLength() == 0) return null;
+
+                var first = arr[0];
+                double lat = double.Parse(first.GetProperty("lat").GetString(), CultureInfo.InvariantCulture);
+                double lon = double.Parse(first.GetProperty("lon").GetString(), CultureInfo.InvariantCulture);
+                string displayName = first.GetProperty("display_name").GetString();
+                return (lat, lon, displayName);
+            }
+            catch (Exception ex) {
+                MessageBox.Show($"緯度経度の取得に失敗しました: {ex.Message}");
+                return null;
+            }
+        }
+
+        // 天気情報を更新
         private async Task UpdateWeather(double lat, double lon) {
-            string url = $"https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={lon}&current_weather=true&daily=sunrise,sunset&timezone=Asia/Tokyo";
+            string url = $"https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={lon}&current_weather=true&daily=temperature_2m_max,temperature_2m_min,precipitation_sum&timezone=Asia/Tokyo";
             var json = await _http.GetStringAsync(url);
             using var doc = JsonDocument.Parse(json);
 
+            // 現在の天気情報
             if (doc.RootElement.TryGetProperty("current_weather", out var current)) {
                 double temp = current.GetProperty("temperature").GetDouble();
                 double wind = current.GetProperty("windspeed").GetDouble();
@@ -98,15 +139,33 @@ namespace TenkiApp {
                 WeatherText.Text = GetWeatherDescription(weatherCode);
             }
 
+            // 週間天気情報
             if (doc.RootElement.TryGetProperty("daily", out var daily)) {
-                if (daily.TryGetProperty("sunrise", out var sunriseArr) && sunriseArr.GetArrayLength() > 0)
-                    SunriseText.Text = $"日の出: {sunriseArr[0].GetString()?.Substring(11, 5)}";
+                var maxTemps = daily.GetProperty("temperature_2m_max");
+                var minTemps = daily.GetProperty("temperature_2m_min");
+                var precipitation = daily.GetProperty("precipitation_sum");
 
-                if (daily.TryGetProperty("sunset", out var sunsetArr) && sunsetArr.GetArrayLength() > 0)
-                    SunsetText.Text = $"日の入り: {sunsetArr[0].GetString()?.Substring(11, 5)}";
+                WeeklyWeatherStack.Children.Clear(); // 前のデータをクリア
+
+                for (int i = 0; i < maxTemps.GetArrayLength(); i++) {
+                    string date = daily.GetProperty("time")[i].GetString();
+                    double maxTemp = maxTemps[i].GetDouble();
+                    double minTemp = minTemps[i].GetDouble();
+                    double precip = precipitation[i].GetDouble();
+
+                    // 週間天気の表示
+                    StackPanel dayPanel = new StackPanel { Orientation = Orientation.Vertical, Margin = new Thickness(10) };
+                    TextBlock dayLabel = new TextBlock { Text = $"{date}: {maxTemp}°C / {minTemp}°C", Foreground = Brushes.White };
+                    TextBlock precipLabel = new TextBlock { Text = $"降水量: {precip}mm", Foreground = Brushes.White };
+
+                    dayPanel.Children.Add(dayLabel);
+                    dayPanel.Children.Add(precipLabel);
+                    WeeklyWeatherStack.Children.Add(dayPanel);
+                }
             }
         }
 
+        // 天気コードに基づく説明
         private string GetWeatherDescription(int code) => code switch {
             0 => "晴れ",
             1 => "ほぼ晴れ",
@@ -138,27 +197,5 @@ namespace TenkiApp {
             99 => "雷雨（強い雹）",
             _ => "不明"
         };
-
-        private void ShowLocationOnMap(double lat, double lon, string name) {
-            string html = $@"
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset='utf-8'/>
-<link rel='stylesheet' href='https://unpkg.com/leaflet/dist/leaflet.css'/>
-<script src='https://unpkg.com/leaflet/dist/leaflet.js'></script>
-<style>#map {{ height: 100%; width: 100%; margin:0; padding:0; }}</style>
-</head>
-<body>
-<div id='map'></div>
-<script>
-var map = L.map('map').setView([{lat}, {lon}], 12);
-L.tileLayer('https://{{s}}.tile.openstreetmap.org/{{z}}/{{x}}/{{y}}.png', {{ maxZoom: 19 }}).addTo(map);
-L.marker([{lat}, {lon}]).addTo(map).bindPopup('{name}').openPopup();
-</script>
-</body>
-</html>";
-            MapBrowser.NavigateToString(html);
-        }
     }
 }
