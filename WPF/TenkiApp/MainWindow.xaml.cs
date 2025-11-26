@@ -3,12 +3,10 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
+using Microsoft.Web.WebView2.Core;
 
-namespace TenkiApp {
+namespace WeatherApp {
     public partial class MainWindow : Window {
-        // HttpClient インスタンスを追加
         private readonly HttpClient _http = new HttpClient();
         private bool _webViewInitialized = false;
 
@@ -20,16 +18,28 @@ namespace TenkiApp {
         // WebView2 初期化処理
         private async void InitializeWebView2() {
             try {
-                // WebView2 の初期化を待つ
+                // WebView2の初期化を待つ
                 await MapBrowser.EnsureCoreWebView2Async();
 
-                // WebView2 初期化後にHTMLを埋め込む
+                // WebView2のナビゲーションが完了した時に呼ばれるイベント
+                MapBrowser.CoreWebView2.NavigationCompleted += (sender, args) => {
+                    if (args.IsSuccess) {
+                        // 正常に読み込まれた場合
+                        _webViewInitialized = true;
+                    } else {
+                        // エラーが発生した場合
+                        MessageBox.Show($"WebView2の読み込みに失敗しました: {args.WebErrorStatus}");
+                    }
+                };
+
+                // 地図を表示するHTMLを設定
                 string html = @"
 <!DOCTYPE html>
 <html lang='ja'>
 <head>
-    <meta charset='utf-8'/>
-    <meta name='viewport' content='width=device-width, initial-scale=1.0'/>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>日本地図 - 天気予報アプリ</title>
     <link rel='stylesheet' href='https://unpkg.com/leaflet/dist/leaflet.css'/>
     <script src='https://unpkg.com/leaflet/dist/leaflet.js'></script>
     <style>
@@ -37,30 +47,36 @@ namespace TenkiApp {
     </style>
 </head>
 <body>
+    <h1>日本地図</h1>
     <div id='map'></div>
     <script>
-        var map = L.map('map').setView([36.0, 138.0], 5);  // 初期位置とズームレベル
-        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
+        var map = L.map('map').setView([36.2048, 138.2529], 5);  // 日本の中心付近
 
-        // マーカーを追加する関数
-        function addMarker(lat, lon, name) {
-            var marker = L.marker([lat, lon]).addTo(map).bindPopup(name);
-            map.setView([lat, lon], 10);  // マーカー追加後にズームイン
-        }
+        // OpenStreetMapのタイルを地図に追加
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href=""https://www.openstreetmap.org/copyright"">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // 日本の主要都市にマーカーを追加
+        var tokyo = L.marker([35.6762, 139.6503]).addTo(map)
+            .bindPopup('<b>東京</b><br>日本の首都').openPopup();
+        var osaka = L.marker([34.6937, 135.5023]).addTo(map)
+            .bindPopup('<b>大阪</b><br>商業の中心地');
+        var sapporo = L.marker([43.0618, 141.3545]).addTo(map)
+            .bindPopup('<b>札幌</b><br>北海道の中心');
     </script>
 </body>
 </html>";
 
-                // HTMLをWebView2に埋め込む
+                // WebView2にHTMLを表示
                 MapBrowser.NavigateToString(html);
-                _webViewInitialized = true;
             }
             catch (Exception ex) {
                 MessageBox.Show($"WebView2の初期化に失敗しました: {ex.Message}");
             }
         }
 
-        // 検索ボタンを押したときの処理
+        // 地名から天気情報を取得
         private async void FetchButton_Click(object sender, RoutedEventArgs e) {
             string place = LocationTextBox.Text.Trim();
             if (string.IsNullOrEmpty(place)) {
@@ -81,7 +97,6 @@ namespace TenkiApp {
 
             await UpdateWeather(lat, lon);
 
-            // WebView2 が初期化されていればマーカーを追加
             if (_webViewInitialized) {
                 AddMarkerToMap(lat, lon, name);
             } else {
@@ -89,37 +104,24 @@ namespace TenkiApp {
             }
         }
 
-        // 地図にマーカーを追加するメソッド
-        private void AddMarkerToMap(double lat, double lon, string name) {
-            MapBrowser.CoreWebView2.ExecuteScriptAsync(
-                $"addMarker({lat.ToString(CultureInfo.InvariantCulture)}, {lon.ToString(CultureInfo.InvariantCulture)}, '{name}');"
-            );
-        }
-
-        // 地名から緯度経度を取得
+        // 緯度経度を取得するメソッド
         private async Task<(double lat, double lon, string displayName)?> GetLatLon(string placeName) {
-            try {
-                string url = $"https://nominatim.openstreetmap.org/search?q={Uri.EscapeDataString(placeName + " 日本")}&format=json&limit=1";
-                var req = new HttpRequestMessage(HttpMethod.Get, url);
-                req.Headers.Add("User-Agent", "TenkiApp/1.0");
-                var resp = await _http.SendAsync(req);
-                if (!resp.IsSuccessStatusCode) return null;
+            string url = $"https://nominatim.openstreetmap.org/search?q={Uri.EscapeDataString(placeName)}&format=json&limit=1";
+            var req = new HttpRequestMessage(HttpMethod.Get, url);
+            req.Headers.Add("User-Agent", "WeatherApp");
+            var resp = await _http.SendAsync(req);
+            if (!resp.IsSuccessStatusCode) return null;
 
-                var json = await resp.Content.ReadAsStringAsync();
-                using var doc = JsonDocument.Parse(json);
-                var arr = doc.RootElement;
-                if (arr.ValueKind != JsonValueKind.Array || arr.GetArrayLength() == 0) return null;
+            var json = await resp.Content.ReadAsStringAsync();
+            using var doc = JsonDocument.Parse(json);
+            var arr = doc.RootElement;
+            if (arr.ValueKind != JsonValueKind.Array || arr.GetArrayLength() == 0) return null;
 
-                var first = arr[0];
-                double lat = double.Parse(first.GetProperty("lat").GetString(), CultureInfo.InvariantCulture);
-                double lon = double.Parse(first.GetProperty("lon").GetString(), CultureInfo.InvariantCulture);
-                string displayName = first.GetProperty("display_name").GetString();
-                return (lat, lon, displayName);
-            }
-            catch (Exception ex) {
-                MessageBox.Show($"緯度経度の取得に失敗しました: {ex.Message}");
-                return null;
-            }
+            var first = arr[0];
+            double lat = double.Parse(first.GetProperty("lat").GetString(), CultureInfo.InvariantCulture);
+            double lon = double.Parse(first.GetProperty("lon").GetString(), CultureInfo.InvariantCulture);
+            string displayName = first.GetProperty("display_name").GetString();
+            return (lat, lon, displayName);
         }
 
         // 天気情報を更新
@@ -128,74 +130,34 @@ namespace TenkiApp {
             var json = await _http.GetStringAsync(url);
             using var doc = JsonDocument.Parse(json);
 
-            // 現在の天気情報
             if (doc.RootElement.TryGetProperty("current_weather", out var current)) {
                 double temp = current.GetProperty("temperature").GetDouble();
                 double wind = current.GetProperty("windspeed").GetDouble();
-                int weatherCode = current.GetProperty("weathercode").GetInt32();
-
                 TempText.Text = $"{temp}°C";
                 WindText.Text = $"風速: {wind} m/s";
-                WeatherText.Text = GetWeatherDescription(weatherCode);
-            }
-
-            // 週間天気情報
-            if (doc.RootElement.TryGetProperty("daily", out var daily)) {
-                var maxTemps = daily.GetProperty("temperature_2m_max");
-                var minTemps = daily.GetProperty("temperature_2m_min");
-                var precipitation = daily.GetProperty("precipitation_sum");
-
-                WeeklyWeatherStack.Children.Clear(); // 前のデータをクリア
-
-                for (int i = 0; i < maxTemps.GetArrayLength(); i++) {
-                    string date = daily.GetProperty("time")[i].GetString();
-                    double maxTemp = maxTemps[i].GetDouble();
-                    double minTemp = minTemps[i].GetDouble();
-                    double precip = precipitation[i].GetDouble();
-
-                    // 週間天気の表示
-                    StackPanel dayPanel = new StackPanel { Orientation = Orientation.Vertical, Margin = new Thickness(10) };
-                    TextBlock dayLabel = new TextBlock { Text = $"{date}: {maxTemp}°C / {minTemp}°C", Foreground = Brushes.White };
-                    TextBlock precipLabel = new TextBlock { Text = $"降水量: {precip}mm", Foreground = Brushes.White };
-
-                    dayPanel.Children.Add(dayLabel);
-                    dayPanel.Children.Add(precipLabel);
-                    WeeklyWeatherStack.Children.Add(dayPanel);
-                }
             }
         }
 
-        // 天気コードに基づく説明
-        private string GetWeatherDescription(int code) => code switch {
-            0 => "晴れ",
-            1 => "ほぼ晴れ",
-            2 => "曇り",
-            3 => "曇り/小雨",
-            45 => "霧",
-            48 => "霧（結露）",
-            51 => "霧雨（弱）",
-            53 => "霧雨（中）",
-            55 => "霧雨（強）",
-            56 => "雪まじりの霧雨（弱）",
-            57 => "雪まじりの霧雨（強）",
-            61 => "小雨（弱）",
-            63 => "小雨（中）",
-            65 => "小雨（強）",
-            66 => "雪まじりの雨（弱）",
-            67 => "雪まじりの雨（強）",
-            71 => "雪（弱）",
-            73 => "雪（中）",
-            75 => "雪（強）",
-            77 => "霰",
-            80 => "にわか雨（弱）",
-            81 => "にわか雨（中）",
-            82 => "にわか雨（強）",
-            85 => "にわか雪（弱）",
-            86 => "にわか雪（強）",
-            95 => "雷雨",
-            96 => "雷雨（軽い雹）",
-            99 => "雷雨（強い雹）",
-            _ => "不明"
-        };
+        // 地図にマーカーを追加
+        private void AddMarkerToMap(double lat, double lon, string name) {
+            MapBrowser.CoreWebView2.ExecuteScriptAsync(
+                $"addMarker({lat.ToString(CultureInfo.InvariantCulture)}, {lon.ToString(CultureInfo.InvariantCulture)}, '{name}');"
+            );
+        }
+
+        // プレースホルダー設定のイベント
+        private void LocationTextBox_GotFocus(object sender, RoutedEventArgs e) {
+            if (LocationTextBox.Text == "場所を入力") {
+                LocationTextBox.Text = "";
+                LocationTextBox.Foreground = System.Windows.Media.Brushes.Black;
+            }
+        }
+
+        private void LocationTextBox_LostFocus(object sender, RoutedEventArgs e) {
+            if (string.IsNullOrEmpty(LocationTextBox.Text)) {
+                LocationTextBox.Text = "場所を入力";
+                LocationTextBox.Foreground = System.Windows.Media.Brushes.Gray;
+            }
+        }
     }
 }
