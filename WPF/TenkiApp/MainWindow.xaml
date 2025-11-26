@@ -1,9 +1,7 @@
 ﻿<Window x:Class="WeatherApp.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:controls="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
         Title="天気予報" Height="720" Width="1280" Background="#1E2A47" FontFamily="Segoe UI">
-
     <Grid>
         <!-- 上部の検索エリア -->
         <DockPanel LastChildFill="False" Background="#1E2A47" Height="50" VerticalAlignment="Top">
@@ -33,13 +31,16 @@
                     </StackPanel>
                 </Border>
 
-                <!-- 右の地図 -->
+                <!-- 右の天気情報 -->
                 <Border Grid.Column="1" Background="#243660" CornerRadius="10" Padding="10" Margin="10,0,0,0">
-                    <controls:WebView2 x:Name="MapBrowser" Height="600"/>
+                    <StackPanel>
+                        <TextBlock x:Name="LocationNameTextRight" Text="場所名" FontSize="24" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center"/>
+                        <TextBlock x:Name="TempTextRight" Text="--°C" FontSize="48" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center" Margin="0,10"/>
+                        <TextBlock x:Name="WindTextRight" Text="風速: -- m/s" FontSize="14" Foreground="White" HorizontalAlignment="Center"/>
+                    </StackPanel>
                 </Border>
             </Grid>
         </ScrollViewer>
 
-        
     </Grid>
 </Window>
